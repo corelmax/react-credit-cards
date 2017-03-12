@@ -17,9 +17,13 @@ body {
   font-family: Roboto, sans-serif;
   font-size: 16px;
   margin: 0;
-  min-height: 100%;
+  min-height: 100vh;
   overflow-x: hidden;
   padding: 0;
+
+  &.is-keyboard-visible {
+    overflow-y: hidden;
+  }
 }
 
 h1 {
@@ -42,6 +46,15 @@ h1 {
     padding: 15px;
   }
 
+  &__form {
+    margin-top: 30px;
+    overflow-y: auto;
+
+    @at-root .is-keyboard-visible & {
+      max-height: 100px;
+    }
+  }
+
   &__footer {
     align-items: center;
     border-top: 1px solid #999;
@@ -53,7 +66,7 @@ h1 {
   }
 
   form {
-    margin-top: 30px;
+    position: relative;
 
     div {
       + div {
@@ -98,6 +111,18 @@ h1 {
       &:focus {
         border-color: #666;
       }
+
+      &:not(:focus) {
+        &.is-valid {
+          border-color: #10bd10 !important;
+          color: #10bd10;
+        }
+
+        &.is-not-valid {
+          border-color: #ff9595;
+          color: #ff9595;
+        }
+      }
     }
   }
 }
@@ -109,7 +134,7 @@ h1 {
       max-width: 700px;
     }
 
-    form {
+    &__form {
       margin-left: 30px;
       margin-top: 0;
     }

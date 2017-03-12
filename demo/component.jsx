@@ -1,24 +1,56 @@
 import React from 'react';
 import Payment from 'payment';
+import cx from 'classnames';
 
 import Cards from '../src';
+
+let hasTouch = false;
 
 export default class Demo extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       number: '',
       name: '',
       exp: '',
       cvc: '',
       focused: '',
+      type: {
+        name: '',
+        maxLength: 16,
+      },
+      isValid: null,
     };
+
+    this.inputs = [];
   }
 
   componentDidMount() {
     Payment.formatCardNumber(document.querySelector('[name="number"]'));
     Payment.formatCardExpiry(document.querySelector('[name="expiry"]'));
     Payment.formatCardCVC(document.querySelector('[name="cvc"]'));
+
+    window.addEventListener('touchstart', function setHasTouch() {
+      hasTouch = true;
+      window.removeEventListener('touchstart', setHasTouch);
+    }, false);
+
+    /*
+     this.inputs.forEach(d => {
+     d.addEventListener('focusin', ev => {
+     this.inputs.forEach(e => {
+     console.log('focusin', e.name, document.activeElement === e);
+     });
+     });
+
+     d.addEventListener('focusout', ev => {
+     this.inputs.forEach(e => {
+     console.log('focusout', e.name, document.activeElement === e);
+     });
+     });
+     });
+     */
   }
 
   handleInputFocus = (e) => {
@@ -27,6 +59,22 @@ export default class Demo extends React.Component {
     this.setState({
       focused: target.name,
     });
+
+    if (hasTouch) {
+      const content = document.querySelector('.rccs__demo__content');
+      const form = document.querySelector('.rccs__demo__form');
+
+      document.body.classList.add('is-keyboard-visible');
+      document.body.style.marginTop = `${-content.offsetTop}px`;
+      form.scrollTop = target.parentElement.offsetTop;
+    }
+  };
+
+  handleInputBlur = () => {
+    if (hasTouch) {
+      document.body.style.marginTop = 0;
+      document.body.classList.remove('is-keyboard-visible');
+    }
   };
 
   handleInputChange = (e) => {
@@ -47,12 +95,16 @@ export default class Demo extends React.Component {
     }
   };
 
-  handleCallback(type, isValid) {
-    console.log(type, isValid); //eslint-disable-line no-console
-  }
+  handleCallback = (type, isValid) => {
+    this.setState({
+      type,
+      isValid: type.issuer !== 'unknown' ? isValid : null,
+    });
+  };
 
   render() {
-    const { name, number, expiry, cvc, focused } = this.state;
+    const { name, number, expiry, cvc, focused, isValid } = this.state;
+
     return (
       <div className="rccs__demo">
         <h1>React Credit Cards</h1>
@@ -65,43 +117,57 @@ export default class Demo extends React.Component {
             focused={focused}
             callback={this.handleCallback}
           />
-          <form>
-            <div>
-              <input
-                type="text"
-                name="number"
-                placeholder="Card Number"
-                onKeyUp={this.handleInputChange}
-                onFocus={this.handleInputFocus}
-              />
-              <div>E.g.: 49..., 51..., 36..., 37...</div>
-            </div>
-            <div>
-              <input
-                type="text"
-                name="name"
-                placeholder="Name"
-                onKeyUp={this.handleInputChange}
-                onFocus={this.handleInputFocus}
-              />
-            </div>
-            <div>
-              <input
-                type="text"
-                name="expiry"
-                placeholder="Valid Thru"
-                onKeyUp={this.handleInputChange}
-                onFocus={this.handleInputFocus}
-              />
-              <input
-                type="text"
-                name="cvc"
-                placeholder="CVC"
-                onKeyUp={this.handleInputChange}
-                onFocus={this.handleInputFocus}
-              />
-            </div>
-          </form>
+          <div className="rccs__demo__form">
+            <form>
+              <div>
+                <input
+                  ref={c => this.inputs.push(c)}
+                  type="tel"
+                  name="number"
+                  placeholder="Card Number"
+                  className={cx({
+                    'is-not-valid': isValid === false,
+                    'is-valid': isValid,
+                  })}
+                  onKeyUp={this.handleInputChange}
+                  onFocus={this.handleInputFocus}
+                  onBlur={this.handleInputBlur}
+                />
+                <div>e.g.: 49..., 51..., 36..., 37...</div>
+              </div>
+              <div>
+                <input
+                  ref={c => this.inputs.push(c)}
+                  type="text"
+                  name="name"
+                  placeholder="Name"
+                  onKeyUp={this.handleInputChange}
+                  onFocus={this.handleInputFocus}
+                  onBlur={this.handleInputBlur}
+                />
+              </div>
+              <div>
+                <input
+                  ref={c => this.inputs.push(c)}
+                  type="tel"
+                  name="expiry"
+                  placeholder="Valid Thru"
+                  onKeyUp={this.handleInputChange}
+                  onFocus={this.handleInputFocus}
+                  onBlur={this.handleInputBlur}
+                />
+                <input
+                  ref={c => this.inputs.push(c)}
+                  type="tel"
+                  name="cvc"
+                  placeholder="CVC"
+                  onKeyUp={this.handleInputChange}
+                  onFocus={this.handleInputFocus}
+                  onBlur={this.handleInputBlur}
+                />
+              </div>
+            </form>
+          </div>
         </div>
         <div className="rccs__demo__footer">
           <iframe
