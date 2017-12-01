@@ -24,10 +24,11 @@
   },
   "homepage": "https://github.com/amarofashion/react-credit-cards#readme",
   "peerDependencies": {
-    "react": "^15.0.0 || ^16.0.0",
-    "prop-types": "^15.6.0"
+    "prop-types": "^15.6.0",
+    "react": "^15.0.0 || ^16.0.0"
   },
   "dependencies": {
+    "classnames": "^2.2.5",
     "payment": "^2.3.0"
   },
   "devDependencies": {

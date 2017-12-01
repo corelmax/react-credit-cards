@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Payment from 'payment';
-import './styles.scss';
+import classNames from 'classnames/bind';
+import styles from './styles.scss';
+
+const cx = classNames.bind(styles);
 
 class ReactCreditCards extends React.Component {
   constructor(props) {
@@ -201,69 +204,69 @@ class ReactCreditCards extends React.Component {
     const expiry = this.formatExpiry();
 
     return (
-      <div key="Cards" className="rccs">
+      <div key="Cards" className={cx('rccs')}>
         <div
-          className={[
+          className={cx([
             'rccs__card',
             `rccs__card--${type.issuer}`,
             focused === 'cvc' && type.issuer !== 'amex' ? 'rccs__card--flipped' : '',
-          ].join(' ').trim()}
+          ].join(' ').trim())}
         >
-          <div className="rccs__card--front">
-            <div className="rccs__card__background" />
-            <div className="rccs__issuer" />
+          <div className={cx("rccs__card--front")}>
+            <div className={cx("rccs__card__background")} />
+            <div className={cx("rccs__issuer")} />
             <div
-              className={[
+              className={cx([
                 'rccs__cvc__front',
                 focused === 'cvc' ? 'rccs--focused' : '',
-              ].join(' ').trim()}
+              ].join(' ').trim())}
             >
               {cvc}
             </div>
             <div
-              className={[
+              className={cx([
                 'rccs__number',
                 number.replace(/ /g, '').length > 16 ? 'rccs__number--large' : '',
                 focused === 'number' ? 'rccs--focused' : '',
                 number.substr(0, 1) !== '•' ? 'rccs--filled' : '',
-              ].join(' ').trim()}
+              ].join(' ').trim())}
             >
               {number}
             </div>
             <div
-              className={[
+              className={cx([
                 'rccs__name',
                 focused === 'name' ? 'rccs--focused' : '',
                 name ? 'rccs--filled' : '',
-              ].join(' ').trim()}
+              ].join(' ').trim())}
             >
               {name || placeholders.name}
             </div>
             <div
-              className={[
+              className={cx([
                 'rccs__expiry',
                 focused === 'expiry' ? 'rccs--focused' : '',
                 expiry.substr(0, 1) !== '•' ? 'rccs--filled' : '',
-              ].join(' ').trim()}
+              ].join(' ').trim())}
             >
-              <div className="rccs__expiry__valid">{locale.valid}</div>
-              <div className="rccs__expiry__value">{expiry}</div>
+              <div className={cx("rccs__expiry__valid")}>{locale.valid}</div>
+              <div className={cx("rccs__expiry__value")}>{expiry}</div>
             </div>
-            <div className="rccs__chip" />
+            <div className={cx("rccs__chip")} />
           </div>
-          <div className="rccs__card--back">
-            <div className="rccs__card__background" />
-            <div className="rccs__stripe" />
-            <div className="rccs__signature" />
+          <div className={cx("rccs__card--back")}>
+            <div className={cx("rccs__card__background")} />
+            <div className={cx("rccs__stripe")} />
+            <div className={cx("rccs__signature")} />
             <div
-              className={[
+              className={cx([
                 'rccs__cvc',
                 focused === 'cvc' ? 'rccs--focused' : '',
-              ].join(' ').trim()}
+              ].join(' ').trim())}
             >
               {cvc}
             </div>
-            <div className="rccs__issuer" />
+            <div className={cx("rccs__issuer")} />
           </div>
         </div>
       </div>
